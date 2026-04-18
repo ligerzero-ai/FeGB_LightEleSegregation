@@ -1,9 +1,10 @@
 #!/cmmc/ptmp/hmai/mambaforge/envs/pymatgen/bin/python
 """
 Generate manuscript figures using the KP dataset (excluding suspicious SCF jobs).
-Produces Figures 3–6 and 9 from the manuscript.
+Produces Figures 3, 4, 5, 6, 7, and 10 from the manuscript (KP data).
 
-Figures 7 (Wsep) and 8 (ANSBO) require cleavage/Chargemol data only available for KS.
+Figures 8 (Wsep) and 9 (ANSBO) require cleavage/Chargemol data only available
+for KS and are produced from df_main_final.
 """
 import matplotlib
 matplotlib.use("Agg")
@@ -57,9 +58,9 @@ gb_sigma_mapping = {
 
 # ---- Load data ----
 print("Loading checkpoints...")
-# Pre-dedup data with Voronoi features (for Figures 4, 5, 6)
+# Pre-dedup data with Voronoi features (for Figures 4, 6, 7)
 df_vor = pd.read_pickle(CHECKPOINT_DIR / "04_df_KP_voronoi.pkl.gz")
-# Post-dedup data (for Figure 9 site types, and Figure 3 min Eseg)
+# Post-dedup data (for Figure 10 site types, Figure 3 min Eseg, and Figure 5 histograms)
 df_filt = pd.read_pickle(CHECKPOINT_DIR / "07_df_KP_filtered.pkl.gz")
 
 # ---- SCF filter ----
@@ -208,16 +209,17 @@ print(f"  Saved 8 Eseg_dist_GB plots")
 
 
 # ======================================================================
-# Figure 5: Eseg vs Voronoi volume
+# Figure 6: Eseg vs Voronoi volume
 # ======================================================================
-print("\nFigure 5: Eseg vs Voronoi volume...")
-element_label_position_fig5 = {
+print("\nFigure 6: Eseg vs Voronoi volume...")
+element_label_position_fig6 = {
     "H": (0.82, 0.75), "He": (0.75, 0.90), "B": (0.85, 0.92), "C": (0.82, 0.92),
     "N": (0.82, 0.92), "O": (0.82, 0.90), "P": (0.82, 0.96), "S": (0.82, 0.85),
 }
-SCATTER_KW_FIG5 = dict(SCATTER_KW)
-SCATTER_KW_FIG5["legend_fontsize"] = 18
-SCATTER_KW_FIG5["style_legend_fontsize"] = 18
+SCATTER_KW_FIG6 = dict(SCATTER_KW)
+SCATTER_KW_FIG6["legend_fontsize"] = 18
+SCATTER_KW_FIG6["style_legend_fontsize"] = 18
+
 for ele in LIGHT_ELEMENTS:
     ele_data = df_vor[(df_vor["element"] == ele) & (df_vor["VorNN_tot_vol"] < 20)].copy()
     show = ele == "C"
@@ -226,10 +228,10 @@ for ele in LIGHT_ELEMENTS:
         x_label=r"Voronoi volume ($\rm{\AA}^3$)",
         y_label=r"E$_{\rm{seg}}$ (eV/atom)",
         show_legend=show, show_style_legend=show,
-        **SCATTER_KW_FIG5,
+        **SCATTER_KW_FIG6,
     )
     ax.axhline(0, linestyle="--", color="k")
-    pos = element_label_position_fig5[ele]
+    pos = element_label_position_fig6[ele]
     ax.text(pos[0], pos[1], ele, transform=ax.transAxes, fontsize=70, ha="left", va="top")
     fig.savefig(FIG_DIR / f"Eseg_Voronoi_NN_dist_{ele}.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -237,12 +239,12 @@ print(f"  Saved 8 Eseg_Voronoi plots")
 
 
 # ======================================================================
-# Figure 6: Eseg vs min nearest-neighbour distance
+# Figure 7: Eseg vs min nearest-neighbour distance
 # ======================================================================
-print("\nFigure 6: Eseg vs min NN distance...")
-element_label_position_fig6 = {
-    "H": (0.82, 0.85), "He": (0.75, 0.90), "B": (0.85, 0.90), "C": (0.82, 0.90),
-    "N": (0.82, 0.90), "O": (0.82, 0.90), "P": (0.82, 0.82), "S": (0.82, 0.80),
+print("\nFigure 7: Eseg vs min NN distance...")
+element_label_position_fig7 = {
+    "H": (0.82, 0.85), "He": (0.75, 0.88), "B": (0.82, 0.90), "C": (0.82, 0.90),
+    "N": (0.82, 0.90), "O": (0.82, 0.90), "P": (0.82, 0.82), "S": (0.82, 0.90),
 }
 for ele in LIGHT_ELEMENTS:
     ele_data = df_vor[(df_vor["element"] == ele) & (df_vor["VorNN_tot_vol"] < 20) & (df_vor["Eseg"] < 0.1)].copy()
@@ -252,12 +254,12 @@ for ele in LIGHT_ELEMENTS:
         x_label=r"Min nearest neighbour dist ($\rm{\AA}$)",
         y_label=r"E$_{\rm{seg}}$ (eV/atom)",
         show_legend=show, show_style_legend=show,
-        legend_anchor=(0.641, -0.01),
+        legend_anchor=(0.641, -0.001),
         style_legend_anchor=(0.641, 0.55),
         **{k: v for k, v in SCATTER_KW.items() if k not in ("legend_anchor", "style_legend_anchor")},
     )
     ax.axhline(0, linestyle="--", color="k")
-    pos = element_label_position_fig6[ele]
+    pos = element_label_position_fig7[ele]
     ax.text(pos[0], pos[1], ele, transform=ax.transAxes, fontsize=70, ha="left", va="top")
     fig.savefig(FIG_DIR / f"Eseg_min_nn_dist_{ele}.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -265,9 +267,9 @@ print(f"  Saved 8 Eseg_min_nn_dist plots")
 
 
 # ======================================================================
-# Figure 9: Site type bar chart
+# Figure 10: Site type bar chart
 # ======================================================================
-print("\nFigure 9: Site type classification...")
+print("\nFigure 10: Site type classification...")
 if "site_types_mixed" in df_filt.columns:
     from pymatgen.core import Element
     elements = sorted(df_filt["element"].unique(), key=lambda x: Element(x).Z)
@@ -326,16 +328,16 @@ else:
 
 
 # ======================================================================
-# Figure 7: Eseg vs R_Wsep_RGS (Rice-Wang work of separation)
+# Figure 8: Eseg vs R_Wsep_RGS (Rice-Wang work of separation)
 #   Uses KS data from pre-computed df_main (cleavage calcs are KS-only)
 # ======================================================================
-print("\nFigure 7: Eseg vs R_Wsep (KS, from df_main)...")
+print("\nFigure 8: Eseg vs R_Wsep (KS, from df_main)...")
 df_main_path = CHECKPOINT_DIR / "09_df_main_final.pkl.gz"
 if df_main_path.exists():
     df_main = pd.read_pickle(df_main_path)
     df_main["GB_string"] = df_main["GB"]
 
-    element_label_position_fig7 = {
+    element_label_position_fig8 = {
         "H": (0.78, 0.93), "He": (0.05, 0.25), "B": (0.78, 0.93), "C": (0.78, 0.93),
         "N": (0.78, 0.93), "O": (0.78, 0.93), "P": (0.78, 0.93), "S": (0.78, 0.93),
     }
@@ -359,17 +361,17 @@ if df_main_path.exists():
         )
         ax.axhline(1, linestyle="--", color="k")
         ax.axvline(0, linestyle="--", color="k")
-        pos = element_label_position_fig7[ele]
+        pos = element_label_position_fig8[ele]
         ax.text(pos[0], pos[1], ele, transform=ax.transAxes, fontsize=70, ha="left", va="top")
         fig.savefig(FIG_DIR / f"Eseg_RWsepRGS_{ele}.png", dpi=300, bbox_inches="tight")
         plt.close(fig)
     print(f"  Saved 8 Eseg_RWsepRGS plots")
 
     # ======================================================================
-    # Figure 8: Eseg vs R_ANSBO (area-normalised summed bond orders)
+    # Figure 9: Eseg vs R_ANSBO (area-normalised summed bond orders)
     # ======================================================================
-    print("\nFigure 8: Eseg vs R_ANSBO (KS, from df_main)...")
-    element_label_position_fig8 = {
+    print("\nFigure 9: Eseg vs R_ANSBO (KS, from df_main)...")
+    element_label_position_fig9 = {
         "H": (0.05, 0.92), "He": (0.05, 0.25), "B": (0.05, 0.92), "C": (0.05, 0.92),
         "N": (0.05, 0.92), "O": (0.05, 0.92), "P": (0.05, 0.92), "S": (0.78, 0.96),
     }
@@ -386,7 +388,7 @@ if df_main_path.exists():
         )
         ax.axhline(1.0, linestyle="--", color="k")
         ax.axvline(0, linestyle="--", color="k")
-        pos = element_label_position_fig8[ele]
+        pos = element_label_position_fig9[ele]
         ax.text(pos[0], pos[1], ele, transform=ax.transAxes, fontsize=70, ha="left", va="top")
         fig.savefig(FIG_DIR / f"Eseg_R_ANSBO_{ele}.png", dpi=300, bbox_inches="tight")
         plt.close(fig)
@@ -423,9 +425,9 @@ else:
 
 
 # ======================================================================
-# Histograms: Eseg distribution per element, split by site type
+# Figure 5: Eseg histograms per element, split by site type
 # ======================================================================
-print("\nHistograms: Eseg distributions by site type...")
+print("\nFigure 5: Eseg histograms by site type...")
 
 site_colors = {"int": "tab:blue", "sub": "tab:orange", "mixed": "tab:green"}
 site_order_hist = ["int", "sub", "mixed"]
@@ -466,7 +468,7 @@ for ele in LIGHT_ELEMENTS:
     fig.tight_layout()
     fig.savefig(FIG_DIR / f"Eseg_histogram_{ele}.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
-print(f"  Saved 8 Eseg_histogram plots")
+print(f"  Saved 8 Fig 5 Eseg_histogram plots")
 
 
 # ======================================================================
@@ -474,7 +476,7 @@ print(f"  Saved 8 Eseg_histogram plots")
 # ======================================================================
 print(f"\n{'='*60}")
 print(f"All figures saved to: {FIG_DIR}")
-print(f"Figures 3-6, 9: KP data")
-print(f"Figures 7-8 + averageBO: KS data (cleavage/Chargemol)")
-print(f"Histograms: KP data (dedup'd)")
+print(f"Figures 3, 4, 6, 7, 10: KP data")
+print(f"Figures 8-9 + averageBO: KS data (cleavage/Chargemol)")
+print(f"Figure 5 (histograms): KP data (dedup'd)")
 print(f"{'='*60}")
