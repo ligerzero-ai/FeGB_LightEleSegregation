@@ -1,12 +1,12 @@
 # FeGB Light Element Segregation — Figures and Analysis
 
+> ⚠️ **Source data withheld until peer review.** The cached analysis checkpoints (`data/checkpoints/`) and raw DFT DataFrames (`data/raw/`) referenced by the figure-generation scripts are not yet included in this repository. They will be added when the manuscript enters peer review. The pre-generated figures in `figures/` and all analysis code are already present.
+
 Reproducible figure generation and analysis code accompanying the manuscript:
 
 > **Grain boundary segregation of light elements and their effects on cohesion in ferritic steels**
 >
 > Han Lin Mai, Xiang-Yuan Cui, Tilmann Hickel, Simon P. Ringer, Jörg Neugebauer
-
-Every figure in the main text and Supplementary Information can be regenerated from the cached analysis checkpoints stored in this repository — no live database access or original DFT outputs required.
 
 ## Quick start
 
@@ -65,9 +65,9 @@ All scripts use paths relative to the repository root, so they run from any work
 └── figures/                           # All generated PNG figures
 ```
 
-## Raw DFT data
+## Raw DFT data and analysis checkpoints
 
-The full set of raw DFT output DataFrames (interstitial and substitutional GB calculations, bulk references, cleaved-surface energies, Chargemol DDEC6 bond orders) will be provided as soon as the manuscript enters peer review. The cached analysis checkpoints in `data/checkpoints/` contain everything needed to regenerate the figures presented in the manuscript and SI.
+The cached analysis checkpoints (`data/checkpoints/*.pkl.gz`) and the full set of raw DFT output DataFrames (interstitial and substitutional GB calculations, bulk references, cleaved-surface energies, Chargemol DDEC6 bond orders, in `data/raw/`) will be released when the manuscript enters peer review. Until then, the figure-generation scripts cannot be re-run end-to-end; the pre-generated figures in `figures/` and the LaTeX tables in `data/` are however already present in this repository.
 
 ## Grain boundary systems
 
