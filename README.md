@@ -163,7 +163,13 @@ If you use this data, please cite:
 ## Related work
 
 The substitutional segregation data across the full periodic table is available from our prior study:
-- Mai et al., "High-throughput ab initio study of segregation in ferritic iron grain boundaries" (2025)
+
+> Mai, H. L., Cui, X.-Y., Hickel, T., Neugebauer, J., Ringer, S. P.
+> **A high-throughput ab initio study of elemental segregation and cohesion at ferritic-iron grain boundaries.**
+> *Acta Materialia* **297**, 121288 (2025).
+> [doi:10.1016/j.actamat.2025.121288](https://doi.org/10.1016/j.actamat.2025.121288)
+
+Data and code: [ligerzero-ai/FeGB_PtableSeg_FromFirstPrinciples_Data](https://github.com/ligerzero-ai/FeGB_PtableSeg_FromFirstPrinciples_Data)
 
 ## License
 
