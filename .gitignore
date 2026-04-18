@@ -1,0 +1,15 @@
+# Source data — withheld until manuscript enters peer review
+data/checkpoints/*.pkl
+data/checkpoints/*.pkl.gz
+data/raw/
+
+# Python
+__pycache__/
+*.pyc
+*.swp
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
