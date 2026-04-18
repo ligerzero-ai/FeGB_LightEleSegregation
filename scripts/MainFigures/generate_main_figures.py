@@ -253,7 +253,7 @@ for ele in LIGHT_ELEMENTS:
         y_label=r"E$_{\rm{seg}}$ (eV/atom)",
         show_legend=show, show_style_legend=show,
         legend_anchor=(0.641, -0.01),
-        style_legend_anchor=(0.641, 0.47),
+        style_legend_anchor=(0.641, 0.55),
         **{k: v for k, v in SCATTER_KW.items() if k not in ("legend_anchor", "style_legend_anchor")},
     )
     ax.axhline(0, linestyle="--", color="k")
@@ -300,7 +300,7 @@ if "site_types_mixed" in df_filt.columns:
     ax.set_xticks(x)
     ax.set_xticklabels(elements, fontsize=20)
     ax.set_ylabel("Unique sites in GB set", fontsize=24)
-    ax.legend(fontsize=17.5, loc="upper left", bbox_to_anchor=(0.18, 1.1), ncol=3, frameon=True, borderaxespad=0.1)
+    ax.legend(fontsize=17.5, loc="upper left", bbox_to_anchor=(0.0, 1.18), ncol=3, frameon=True, borderaxespad=0.1)
     ax.tick_params(axis="y", labelsize=20)
 
     # Annotate percentages
@@ -344,7 +344,7 @@ if df_main_path.exists():
     SCATTER_KW_WSEP["legend_fontsize"] = 17.5
     SCATTER_KW_WSEP["style_legend_fontsize"] = 17.5
     SCATTER_KW_WSEP["legend_anchor"] = (0.001, 0.00)
-    SCATTER_KW_WSEP["style_legend_anchor"] = (0.325, 0.00)
+    SCATTER_KW_WSEP["style_legend_anchor"] = (0.325, -0.04)
 
     for ele in LIGHT_ELEMENTS:
         df_ele = df_main[(df_main["element"] == ele) & (df_main["VorNN_tot_vol"] < 20) & (df_main["eta_Wsep_RGS_min"] < 3)]
@@ -409,7 +409,7 @@ if df_main_path.exists():
             y_label=r"$\Delta$average(BO)",
             show_legend=show, show_style_legend=show,
             **{k: v for k, v in SCATTER_KW_WSEP.items() if k not in ("style_legend_anchor",)},
-            style_legend_anchor=(0.42, 0.00),
+            style_legend_anchor=(0.58, 0.00),
         )
         ax.axhline(1, linestyle="--", color="k")
         ax.axvline(0, linestyle="--", color="k")
@@ -460,7 +460,7 @@ for ele in LIGHT_ELEMENTS:
     ax.set_ylabel("Count", fontsize=24)
     ax.tick_params(axis="both", labelsize=20)
     if show_legend:
-        ax.legend(fontsize=20, loc="upper left", bbox_to_anchor=(0.2, 0.98))
+        ax.legend(fontsize=20, loc="upper right", bbox_to_anchor=(1.0, 0.98))
     ax.text(0.08, 0.92, ele, transform=ax.transAxes, fontsize=70,
             ha="left", va="top")
     fig.tight_layout()
