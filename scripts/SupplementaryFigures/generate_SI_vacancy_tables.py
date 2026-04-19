@@ -79,8 +79,11 @@ def write_persite_table(df: pd.DataFrame, path: Path) -> None:
         f.write('\\begin{tabular}{llrr}\n\\hline\n')
         f.write('GB & Site & $E_\\mathrm{vac}$ (eV) & $E_\\mathrm{vf}$ (eV) \\\\\n\\hline\n')
         for _, r in df_sorted.iterrows():
-            f.write(f"{GB_LATEX[r['GB']]} & {int(r['site'])} & "
-                    f"{r['E_vac']:.3f} & {r['E_vf']:+.3f} \\\\\n")
+            import math
+            e_vac = r['E_vac']; e_vf = r['E_vf']
+            vac_str = 'FAILED' if (e_vac is None or (isinstance(e_vac, float) and math.isnan(e_vac))) else f"{e_vac:.3f}"
+            vf_str  = 'FAILED' if (e_vf  is None or (isinstance(e_vf, float) and math.isnan(e_vf)))  else f"{e_vf:+.3f}"
+            f.write(f"{GB_LATEX[r['GB']]} & {int(r['site'])} & {vac_str} & {vf_str} \\\\\n")
         f.write('\\hline\n\\end{tabular}\n')
 
 
