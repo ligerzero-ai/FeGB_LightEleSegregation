@@ -30,7 +30,7 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install package and dependencies
-        run: uv sync --python ${{ matrix.python-version }} --extra notebook
+        run: uv sync --python ${{ matrix.python-version }} --extra notebook --extra test
 
       - name: Show dependency versions
         run: |
@@ -53,21 +53,8 @@ jobs:
           uv run python scripts/SupplementaryFigures/generate_SI_nn_correlation.py
           uv run python scripts/SupplementaryFigures/generate_SI_vacancy_tables.py
 
-      - name: Smoke-load every DataFrame
-        run: |
-          uv run python - <<'PY'
-          import pandas as pd
-          from pathlib import Path
-          from pymatgen.core import Structure
-          for f in [*Path('data/raw_data').glob('*.pkl.gz'),
-                    *Path('data/checkpoints').glob('*.pkl.gz')]:
-              df = pd.read_pickle(f)
-              if 'structures' in df.columns:
-                  sample = df['structures'].iloc[0]
-                  if hasattr(sample, '__len__') and len(sample) > 0:
-                      Structure.from_str(str(sample[-1]), fmt='json')
-              print(f'OK: {f.name}  shape={df.shape}')
-          PY
+      - name: Run pytest (DataFrame load + Structure deserialisation)
+        run: uv run pytest tests/ -v
 
       - name: Upload regenerated figures
         if: matrix.python-version == '3.12'

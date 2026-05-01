@@ -27,6 +27,9 @@ analysis = [
     "ase>=3.22",
     "dscribe>=2.0",
 ]
+test = [
+    "pytest>=7",
+]
 
 [project.urls]
 Repository = "https://github.com/ligerzero-ai/FeGB_LightEleSegregation"
