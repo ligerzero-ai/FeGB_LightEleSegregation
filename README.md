@@ -121,7 +121,9 @@ where:
 
 ### Computing E_seg from the raw pickles
 
-A complete, self-contained example is provided at [`scripts/example_compute_eseg.py`](scripts/example_compute_eseg.py). Minimal version:
+A complete, self-contained example is provided at [`scripts/example_compute_eseg.py`](scripts/example_compute_eseg.py). Run it with `--verify` to cross-check the per-row output against the production `Eseg_KS` column in `data/checkpoints/08_df_compare_pairwise.pkl.gz` — every one of the 4,129 matched interstitial rows reproduces to machine precision (`max |ΔE_seg| = 0.000000 eV`).
+
+Minimal version:
 
 ```python
 import pandas as pd
