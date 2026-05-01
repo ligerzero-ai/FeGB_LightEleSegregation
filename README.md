@@ -1,5 +1,8 @@
 # FeGB Light Element Segregation — Figures and Analysis
 
+[![CI](https://github.com/ligerzero-ai/FeGB_LightEleSegregation/actions/workflows/ci.yml/badge.svg)](https://github.com/ligerzero-ai/FeGB_LightEleSegregation/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Reproducible figure generation, analysis code, cached pipeline checkpoints, and raw DFT DataFrames accompanying the manuscript:
 
 > **Grain boundary segregation of light elements and their effects on cohesion in ferritic steels**

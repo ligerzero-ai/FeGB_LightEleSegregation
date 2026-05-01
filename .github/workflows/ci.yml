@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly run on Sunday at 06:00 UTC to catch upstream regressions
+    - cron: '0 6 * * 0'
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: 'pyproject.toml'
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install package and dependencies
+        run: uv sync --python ${{ matrix.python-version }} --extra notebook
+
+      - name: Show dependency versions
+        run: |
+          uv run python -c "
+          from importlib.metadata import version
+          for p in ['numpy', 'pandas', 'matplotlib', 'pymatgen']:
+              print(f'{p}={version(p)}')
+          "
+
+      - name: Verify E_seg reproduction (raw → production)
+        run: uv run python scripts/example_compute_eseg.py --verify
+
+      - name: Generate main-text figures
+        run: uv run python scripts/MainFigures/generate_main_figures.py
+
+      - name: Generate SI figures and tables
+        run: |
+          uv run python scripts/SupplementaryFigures/generate_SI_kpoint_parity.py
+          uv run python scripts/SupplementaryFigures/generate_SI_kpoint_zoom.py
+          uv run python scripts/SupplementaryFigures/generate_SI_nn_correlation.py
+          uv run python scripts/SupplementaryFigures/generate_SI_vacancy_tables.py
+
+      - name: Smoke-load every DataFrame
+        run: |
+          uv run python - <<'PY'
+          import pandas as pd
+          from pathlib import Path
+          from pymatgen.core import Structure
+          for f in [*Path('data/raw_data').glob('*.pkl.gz'),
+                    *Path('data/checkpoints').glob('*.pkl.gz')]:
+              df = pd.read_pickle(f)
+              if 'structures' in df.columns:
+                  sample = df['structures'].iloc[0]
+                  if hasattr(sample, '__len__') and len(sample) > 0:
+                      Structure.from_str(str(sample[-1]), fmt='json')
+              print(f'OK: {f.name}  shape={df.shape}')
+          PY
+
+      - name: Upload regenerated figures
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: figures
+          path: figures/
+          retention-days: 14
