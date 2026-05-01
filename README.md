@@ -8,9 +8,27 @@ Reproducible figure generation, analysis code, cached pipeline checkpoints, and 
 
 ## Quick start
 
+### Environment
+
+The repository ships with both a `pyproject.toml` and a conda `environment.yaml`. Either of the following will set up a working environment:
+
 ```bash
-# Reproduce all figures (one Jupyter notebook with markdown sections)
-jupyter notebook reproduce_figures.ipynb
+# Option A: conda / mamba
+mamba env create -f environment.yaml
+conda activate fegb-lightele
+
+# Option B: pip / venv
+python -m venv .venv && source .venv/bin/activate
+pip install -e .[notebook]
+```
+
+Required packages: `numpy`, `pandas`, `matplotlib`, `pymatgen` (plus `jupyterlab`/`ipykernel` for the notebook).
+
+### Reproduce the figures
+
+```bash
+# All figures, in one Jupyter notebook with markdown sections
+jupyter lab reproduce_figures.ipynb
 
 # Or regenerate one figure group at a time from the command line:
 python scripts/MainFigures/generate_main_figures.py
@@ -18,6 +36,10 @@ python scripts/SupplementaryFigures/generate_SI_kpoint_parity.py
 python scripts/SupplementaryFigures/generate_SI_kpoint_zoom.py
 python scripts/SupplementaryFigures/generate_SI_nn_correlation.py
 python scripts/SupplementaryFigures/generate_SI_vacancy_tables.py
+
+# Reproduce segregation energies from the raw VASP DataFrames and
+# cross-check against the production values:
+python scripts/example_compute_eseg.py --verify
 ```
 
 All scripts use paths relative to the repository root, so they run from any working directory.

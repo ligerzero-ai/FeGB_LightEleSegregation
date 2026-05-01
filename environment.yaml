@@ -1,0 +1,18 @@
+name: fegb-lightele
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10,<3.13
+  - numpy>=1.24
+  - pandas>=2.0
+  - matplotlib>=3.6
+  - pymatgen>=2023.5
+  # Notebook execution
+  - jupyterlab>=4.0
+  - ipykernel>=6.0
+  # Optional: re-running the full analysis pipeline (not strictly needed for the
+  # published figure scripts). Comment out to keep the environment small.
+  # - scipy>=1.10
+  # - scikit-learn>=1.3
+  # - ase>=3.22
+  # - dscribe>=2.0

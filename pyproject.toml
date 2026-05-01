@@ -1,0 +1,39 @@
+[project]
+name = "fegb-lightele-segregation"
+version = "0.1.0"
+description = "Reproducible figures and analysis for the Mai et al. light-element Fe GB segregation paper"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Han Lin Mai", email = "ligerzerof@gmail.com" },
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "matplotlib>=3.6",
+    "pymatgen>=2023.5",
+]
+
+[project.optional-dependencies]
+notebook = [
+    "jupyterlab>=4.0",
+    "ipykernel>=6.0",
+]
+analysis = [
+    # Required only if re-running the full analysis pipeline (not figure scripts)
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "ase>=3.22",
+    "dscribe>=2.0",
+]
+
+[project.urls]
+Repository = "https://github.com/ligerzero-ai/FeGB_LightEleSegregation"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = []
