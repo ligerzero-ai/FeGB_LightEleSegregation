@@ -102,7 +102,12 @@ All scripts use paths relative to the repository root, so they run from any work
 
 ## Raw DFT data and analysis checkpoints
 
-Both the **cached analysis checkpoints** (`data/checkpoints/`) and the **full raw DFT DataFrames** (`data/raw_data/`) are included in this repository. The figure-generation scripts read from `data/checkpoints/` directly. The raw DataFrames in `data/raw_data/` contain the full per-row VASP outputs (energies, forces, stresses, magnetic moments, ionic-step structures, job names, convergence flags) for every job that contributes to the figures and are sufficient to re-run the entire analysis pipeline from scratch. See `data/raw_data/README.md` for per-file descriptions and the column glossary.
+Both the **cached analysis checkpoints** (`data/checkpoints/`) and the **full raw DFT DataFrames** (`data/raw_data/`) are included in this repository. The figure-generation scripts read from `data/checkpoints/` directly. The raw DataFrames in `data/raw_data/` contain the full per-row VASP outputs (energies, forces, stresses, magnetic moments, ionic-step structures, job names, convergence flags) for every job that contributes to the figures and are sufficient to re-run the entire analysis pipeline from scratch.
+
+**Per-DataFrame column schemas** are documented in full in the subdirectory READMEs:
+
+- [`data/raw_data/README.md`](data/raw_data/README.md) — schema for the 9 raw VASP DataFrames (per-row energies/forces/stresses/magmoms/structures/INCAR/KPOINTS, plus the two Chargemol DDEC6 tables).
+- [`data/checkpoints/README.md`](data/checkpoints/README.md) — schema for the 7 cached analysis checkpoints, including the per-site Voronoi/SOAP descriptors (`04_*`, `07_*`), the master cohesion DataFrame (`09_df_main_final.pkl.gz`, 116 columns), the KS↔KP comparison tables (`08_*`), and the vacancy-formation table.
 
 ## Grain boundary systems
 
